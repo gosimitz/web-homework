@@ -8,6 +8,7 @@ To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
   * Create and migrate your database with `mix ecto.setup`
+     * If you get an error that says `The database for Homework.Repo couldn't be created: killed`, then run: `/usr/local/opt/postgres/bin/createuser -s postgres`
   * Start Phoenix endpoint with `mix phx.server`
 
 Now you can visit [`localhost:8000`](http://localhost:8000) from your browser.
