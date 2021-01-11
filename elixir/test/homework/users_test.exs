@@ -68,5 +68,11 @@ defmodule Homework.UsersTest do
       user = user_fixture()
       assert %Ecto.Changeset{} = Users.change_user(user)
     end
+
+    test "delete_user/1 on a nonexistent user" do
+      user = user_fixture()
+      Users.delete_user(user)
+      assert_raise Ecto.StaleEntryError, fn -> Users.delete_user(user) end
+    end
   end
 end

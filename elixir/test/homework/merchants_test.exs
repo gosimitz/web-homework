@@ -65,5 +65,11 @@ defmodule Homework.MerchantsTest do
       merchant = merchant_fixture()
       assert %Ecto.Changeset{} = Merchants.change_merchant(merchant)
     end
+
+    test "delete_merchant/1 on a nonexistent merchant" do
+      merchant = merchant_fixture()
+      Merchants.delete_merchant(merchant)
+      assert_raise Ecto.StaleEntryError, fn -> Merchants.delete_merchant(merchant) end
+    end
   end
 end

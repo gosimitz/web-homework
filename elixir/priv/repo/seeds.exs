@@ -25,7 +25,7 @@ last_names = ["Sitwell", "Bluth", "Veal", "Funke", "Austero", "Loblaw", "Zuckerc
 descriptions = ["Homebuilder", "Egg", "Private Investigator", "Attorney", "Software Developer", "Actor"]
 
 # Create the desired amount of users.
-for i <- 1..num_user_add do
+for _i <- 1..num_user_add do
   # Randomly select a first and last name
   first_index = :rand.uniform(Enum.count(first_names))
   last_index = :rand.uniform(Enum.count(last_names))
@@ -36,7 +36,7 @@ for i <- 1..num_user_add do
 end
 
 # Create the desired amount of merchants.
-for i <- 1..num_merchant_add do
+for _i <- 1..num_merchant_add do
   # Randomly select a name and description
   name_index = :rand.uniform(Enum.count(merchant_names))
   desc_index = :rand.uniform(Enum.count(descriptions))
@@ -51,7 +51,7 @@ merchant_data = Merchants.list_merchants([])
 
 
 # Create the number of Transactions specified randomly.
-for i <- 1..num_transaction_add do
+for _i <- 1..num_transaction_add do
   # Getting random user_index and merchant_index.
   user_index = :rand.uniform(Enum.count(user_data))
   merchant_index = :rand.uniform(Enum.count(merchant_data))
