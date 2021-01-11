@@ -81,5 +81,7 @@ for _i <- 1..num_transaction_add do
   # Get the ids of the user and merchant at those indices
   uid = Enum.at(user_data, user_index-1).id
   mid = Enum.at(merchant_data, merchant_index-1).id
-  Transactions.create_transaction(%{user_id: uid, merchant_id: mid, amount: 64, debit: true, description: "One Bluth Frozen Banana"})
+  # User's company_id should be the same as the transaction company_id.
+  cid = Enum.at(user_data, user_index-1).company_id
+  Transactions.create_transaction(%{user_id: uid, merchant_id: mid, company_id: cid, amount: 64, debit: true, description: "One Bluth Frozen Banana"})
 end

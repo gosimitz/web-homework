@@ -5,7 +5,7 @@ defmodule HomeworkWeb.Schemas.CompaniesSchema do
   """
   use Absinthe.Schema.Notation
 
-  alias HomeworkWeb.Resolvers.CompaniesSchema
+  alias HomeworkWeb.Resolvers.CompaniesResolver
 
   object :company do
     field(:id, non_null(:id))
