@@ -21,7 +21,7 @@ num_merchant_add = 10
 num_transaction_add = 10
 
 Companies.create_company(%{credit_line: 123, name: "Bombay House"})
-
+compid = "9be19f53-396e-44ec-8a01-70bda355d670"
 merchant_names = ["Michael B. Company", "Gobias Industries", "Steve Holt! Pest Control", "Sitwell Enterprises", "Bluth Company"]
 first_names = ["Maebe", "Egg", "Her?", "Plant", "Ann", "Gene", "George", "Lucille", "George Michael", "Stan", "Lucille 2", "Bob", "Barry", "Tobias", "Buster"]
 last_names = ["Sitwell", "Bluth", "Veal", "Funke", "Austero", "Loblaw", "Zuckercorn", "Holt!", "Parmesan"]
@@ -33,9 +33,9 @@ for _i <- 1..num_user_add do
   first_index = :rand.uniform(Enum.count(first_names))
   last_index = :rand.uniform(Enum.count(last_names))
   # Get the first and last name at those indices
-  f_name = Enum.at(first_names, first_index)
-  l_name = Enum.at(last_names, last_index)
-  Users.create_user(%{dob: "11-02-2003", first_name: f_name, last_name: l_name})
+  f_name = Enum.at(first_names, first_index-1)
+  l_name = Enum.at(last_names, last_index-1)
+  Users.create_user(%{dob: "11-02-2003", company_id: "9be19f53-396e-44ec-8a01-70bda355d670", first_name: f_name, last_name: l_name})
 end
 
 # Create the desired amount of merchants.
@@ -44,14 +44,13 @@ for _i <- 1..num_merchant_add do
   name_index = :rand.uniform(Enum.count(merchant_names))
   desc_index = :rand.uniform(Enum.count(descriptions))
   # Get the name and description at those indices
-  name = Enum.at(merchant_names, name_index)
-  desc = Enum.at(descriptions, desc_index)
+  name = Enum.at(merchant_names, name_index-1)
+  desc = Enum.at(descriptions, desc_index-1)
   Merchants.create_merchant(%{name: name, description: desc})
 end
 
 user_data = Users.list_users([])
 merchant_data = Merchants.list_merchants([])
-
 
 # Create the number of Transactions specified randomly.
 for _i <- 1..num_transaction_add do
@@ -59,7 +58,7 @@ for _i <- 1..num_transaction_add do
   user_index = :rand.uniform(Enum.count(user_data))
   merchant_index = :rand.uniform(Enum.count(merchant_data))
   # Get the ids of the user and merchant at those indices
-  uid = Enum.at(user_data, user_index).id
-  mid = Enum.at(merchant_data, merchant_index).id
+  uid = Enum.at(user_data, user_index-1).id
+  mid = Enum.at(merchant_data, merchant_index-1).id
   Transactions.create_transaction(%{user_id: uid, merchant_id: mid, amount: 64, debit: true, description: "One Bluth Frozen Banana"})
 end
