@@ -68,6 +68,7 @@ defmodule Homework.Transactions do
 
   """
   def update_transaction(%Transaction{} = transaction, attrs) do
+    # TODO: Update associated company_id's available_credit
     transaction
     |> Transaction.changeset(attrs)
     |> Repo.update()
@@ -86,6 +87,7 @@ defmodule Homework.Transactions do
 
   """
   def delete_transaction(%Transaction{} = transaction) do
+    # TODO: Update associated company_id's available_credit
     Repo.delete(transaction)
   end
 

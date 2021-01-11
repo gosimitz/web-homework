@@ -33,9 +33,9 @@ defmodule HomeworkWeb.Schema do
   end
 
   mutation do
+    import_fields(:company_mutations)
     import_fields(:transaction_mutations)
     import_fields(:user_mutations)
     import_fields(:merchant_mutations)
-    import_fields(:company_mutations)
   end
 end

@@ -21,7 +21,7 @@ defmodule Homework.Companies do
   def list_companies(_args) do
     Repo.all(Company)
   end
-
+  #TODO: Create a method that updates the available_credit item.
   @doc """
   Gets a single company.
 
