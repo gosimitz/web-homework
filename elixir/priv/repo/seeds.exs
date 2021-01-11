@@ -12,6 +12,7 @@
 alias Homework.Users
 alias Homework.Merchants
 alias Homework.Transactions
+alias Homework.Companies
 # Number of users to add to the database
 num_user_add = 10
 # Number of Merchants to add to the database
@@ -19,8 +20,10 @@ num_merchant_add = 10
 # Number of Transactions to add to the database
 num_transaction_add = 10
 
+Companies.create_company(%{credit_line: 123, name: "Bombay House"})
+
 merchant_names = ["Michael B. Company", "Gobias Industries", "Steve Holt! Pest Control", "Sitwell Enterprises", "Bluth Company"]
-first_names = ["Maebe", "Egg", "Plant", "Ann", "Gene", "George", "Lucille", "George Michael", "Stan", "Lucille 2", "Bob", "Barry", "Tobias", "Buster"]
+first_names = ["Maebe", "Egg", "Her?", "Plant", "Ann", "Gene", "George", "Lucille", "George Michael", "Stan", "Lucille 2", "Bob", "Barry", "Tobias", "Buster"]
 last_names = ["Sitwell", "Bluth", "Veal", "Funke", "Austero", "Loblaw", "Zuckercorn", "Holt!", "Parmesan"]
 descriptions = ["Homebuilder", "Egg", "Private Investigator", "Attorney", "Software Developer", "Actor"]
 
