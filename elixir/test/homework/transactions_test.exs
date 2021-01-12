@@ -24,10 +24,10 @@ defmodule Homework.TransactionsTest do
         {:ok, company1} =
           Companies.create_company(%{credit_line: 5280, name: "some company"})
 
+
      {:ok, company2} =
           Companies.create_company(%{credit_line: 235813, name: "some company"})
-          IO.inspect company2.id
-          IO.inspect "THAT IS THE ID"
+
       {:ok, user1} =
         Users.create_user(%{
           dob: "some dob",
@@ -83,7 +83,9 @@ defmodule Homework.TransactionsTest do
          merchant1: merchant1,
          merchant2: merchant2,
          user1: user1,
-         user2: user2
+         user2: user2,
+         company1: company1,
+         company2: company2,
        }}
     end
 

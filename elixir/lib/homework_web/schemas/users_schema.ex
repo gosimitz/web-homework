@@ -14,6 +14,9 @@ defmodule HomeworkWeb.Schemas.UsersSchema do
     field(:company_id, :id)
     field(:inserted_at, :naive_datetime)
     field(:updated_at, :naive_datetime)
+    field(:company, :company) do
+      resolve(&UsersResolver.company/3)
+    end
   end
 
   object :user_mutations do
