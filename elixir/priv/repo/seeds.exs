@@ -34,7 +34,7 @@ merchant_names = ["Michael B. Company", "Gobias Industries", "Steve Holt! Pest C
 first_names = ["Maebe", "Egg", "Her?", "Plant", "Ann", "Gene", "George", "Lucille", "George Michael", "Stan", "Lucille 2", "Bob", "Barry", "Tobias", "Buster"]
 last_names = ["Sitwell", "Bluth", "Veal", "Funke", "Austero", "Loblaw", "Zuckercorn", "Holt!", "Parmesan"]
 descriptions = ["Homebuilder", "Egg", "Private Investigator", "Attorney", "Software Developer", "Actor"]
-
+IO.inspect "Running in seeds.exs"
 for _i <- 1..num_comp_add do
   comp_index = :rand.uniform(Enum.count(company_names))
   comp_name = Enum.at(company_names, comp_index-1)

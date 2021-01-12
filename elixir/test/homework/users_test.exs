@@ -5,6 +5,8 @@ defmodule Homework.UsersTest do
 
   describe "users" do
     alias Homework.Users.User
+    # alias Homework.Companies
+    # {:ok, company} = Companies.create_company(%{credit_line: 5280, name: "some company"})
 
     @valid_attrs %{dob: "some dob", first_name: "some first_name", last_name: "some last_name"}
     @update_attrs %{
