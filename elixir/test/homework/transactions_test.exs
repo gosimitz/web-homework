@@ -51,7 +51,6 @@ defmodule Homework.TransactionsTest do
         merchant_id: merchant1.id,
         user_id: user1.id,
         company_id: company1.id
-
       }
 
       update_attrs = %{

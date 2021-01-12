@@ -3,6 +3,9 @@ defmodule Homework.CompaniesTest do
   use Homework.DataCase
 
   alias Homework.Companies
+  alias Homework.Transactions
+  alias Homework.Merchants
+  alias Homework.Users
 
   describe "companies" do
     alias Homework.Companies.Company
@@ -71,6 +74,41 @@ defmodule Homework.CompaniesTest do
       company = company_fixture()
       Companies.delete_company(company)
       assert_raise Ecto.StaleEntryError, fn -> Companies.delete_company(company) end
+    end
+
+    test "create_transaction/1 properly affects available credit" do
+      # To create transaction, Merchant, User, and Company must be defined
+      {:ok, company1} = Companies.create_company(@valid_attrs)
+      {:ok, merchant1} =
+        Merchants.create_merchant(%{description: "some description", name: "some name"})
+      {:ok, user1} = Users.create_user(%{ dob: "some dob", first_name: "some first_name",
+          last_name: "some last_name", company_id: company1.id})
+      #create company with credit line 142857.
+
+      {:ok, transaction1} = Transactions.create_transaction(amount: 42857,
+          credit: true, description: "Staircar purchase", merchant_id: merchant1.id,
+          user_id: user1.id, company_id: company1.id)
+
+      assert company1.available_credit == 100000
+
+    end
+    test "delete_transaction/1 properly affects available credit" do
+      # To create transaction, Merchant, User, and Company must be defined
+      {:ok, company1} = Companies.create_company(@valid_attrs)
+      {:ok, merchant1} =
+        Merchants.create_merchant(%{description: "some description", name: "some name"})
+      {:ok, user1} = Users.create_user(%{ dob: "some dob", first_name: "some first_name",
+          last_name: "some last_name", company_id: company1.id})
+      #create company with credit line 142857.
+
+      {:ok} = Transactions.create_transaction(amount: 42857,
+          credit: true, description: "Staircar purchase", merchant_id: merchant1.id,
+          user_id: user1.id, company_id: company1.id)
+      {:ok, delete_me} = Transactions.create_transaction(amount: 500,
+          credit: true, description: "Tickets for a Star War", merchant_id: merchant1.id,
+          user_id: user1.id, company_id: company1.id)
+      {:ok} = Transactions.delete_transaction(id: delete_me.id
+      assert company1.available_credit == 100500
     end
   end
 end
