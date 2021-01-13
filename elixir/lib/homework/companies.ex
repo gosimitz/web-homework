@@ -21,7 +21,6 @@ defmodule Homework.Companies do
   def list_companies(_args) do
     Repo.all(Company)
   end
-  #TODO: Create a method that updates the available_credit item.
   @doc """
   Gets a single company.
 
@@ -51,8 +50,11 @@ defmodule Homework.Companies do
 
   """
   def create_company(attrs \\ %{}) do
+    new_attributes = %{credit_line: attrs.credit_line, name: attrs.name, available_credit: attrs.credit_line}
+    # IO.inspect new_attributes
+
     %Company{}
-    |> Company.changeset(attrs)
+    |> Company.changeset(new_attributes)
     |> Repo.insert()
   end
 
@@ -69,8 +71,42 @@ defmodule Homework.Companies do
 
   """
   def update_company(%Company{} = company, attrs) do
-    company
-    |> Company.changeset(attrs)
+
+    if(attrs.credit_line == nil or company.credit_line == attrs.credit_line) do
+      Company.changeset(company,attrs)
+      |> Repo.update()
+    else
+      update_available_credit(company.id, attrs, company.available_credit+(attrs.credit_line-company.credit_line))
+    end
+  end
+
+  def update_available_credit(id, attrs, nil) do
+    company = Companies.get_company(id)
+    update_available_credit(id, attrs, company.credit_line)
+  end
+  @doc """
+  Updates a company's available_credit. transaction_amount is positive if available_credit
+  is to be decreased and negative if AC is to be increased.
+
+  ## Examples
+
+      iex> update_available_credit(company, %{transaction_amount: new_value})
+      {:ok, %Company{}}
+
+      iex> update_available_credit(company, %{transaction_amount: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_available_credit(id, attrs, available_credit) do
+    company = get_company!(id)
+
+    update_company = %{
+      credit_line: company.credit_line,
+      name: company.name,
+      available_credit: available_credit
+    }
+    # Can't call update_company/2 as we will get recursive loop.
+    Company.changeset(company, update_company)
     |> Repo.update()
   end
 

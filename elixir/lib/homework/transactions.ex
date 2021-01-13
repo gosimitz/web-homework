@@ -7,6 +7,7 @@ defmodule Homework.Transactions do
   alias Homework.Repo
 
   alias Homework.Transactions.Transaction
+  alias Homework.Companies
 
   @doc """
   Returns the list of transactions.
@@ -50,9 +51,12 @@ defmodule Homework.Transactions do
 
   """
   def create_transaction(attrs \\ %{}) do
-    %Transaction{}
+    {:ok, ret_val} = %Transaction{}
     |> Transaction.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert(returning: true)
+    company = Companies.get_company!(ret_val.company_id)
+    Companies.update_available_credit(ret_val.company_id, ret_val.amount, company.available_credit)
+    ret_val
   end
 
   @doc """
@@ -68,10 +72,18 @@ defmodule Homework.Transactions do
 
   """
   def update_transaction(%Transaction{} = transaction, attrs) do
-    # TODO: Update associated company_id's available_credit
-    transaction
+    transaction_difference = attrs.amount - transaction.amount
+    ret_val = transaction
     |> Transaction.changeset(attrs)
     |> Repo.update()
+    company = Companies.get_company(transaction.company_id)
+    update_company = %{
+      credit_line: company.credit_line,
+      name: company.name,
+      available_credit: company.available_credit - transaction_difference
+    }
+    Companies.update_company(company, update_company)
+    ret_val
   end
 
   @doc """
@@ -87,8 +99,15 @@ defmodule Homework.Transactions do
 
   """
   def delete_transaction(%Transaction{} = transaction) do
-    # TODO: Update associated company_id's available_credit
-    Repo.delete(transaction)
+    transaction = Repo.delete(transaction)
+    company = Companies.get_company(transaction.company_id)
+    update_company = %{
+      credit_line: company.credit_line,
+      name: company.name,
+      available_credit: company.available_credit + transaction.amount
+    }
+    Companies.update_company(company, update_company)
+    transaction
   end
 
   @doc """

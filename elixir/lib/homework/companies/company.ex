@@ -6,8 +6,7 @@ defmodule Homework.Companies.Company do
   schema "companies" do
     field(:credit_line, :integer)
     field(:name, :string)
-    field(:available_credit, :integer, virtual: true)
-    # TODO: possibly add the calculation of credit_line - transactions
+    field(:available_credit, :integer)
 
     timestamps()
   end
@@ -15,7 +14,7 @@ defmodule Homework.Companies.Company do
   @doc false
   def changeset(company, attrs) do
     company
-    |> cast(attrs, [:name, :credit_line])
-    |> validate_required([:name, :credit_line])
+    |> cast(attrs, [:name, :credit_line, :available_credit])
+    |> validate_required([:name, :credit_line, :available_credit])
   end
 end
