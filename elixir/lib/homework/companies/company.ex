@@ -23,7 +23,6 @@ defmodule Homework.Companies.Company do
     }
   end
   def modify_attrs(company, attrs, true) do
-    IO.inspect "AVAIL didnt"
     # No need to change the attrs if the credit line stays the same then available_credit does too
       new_attrs = %{
         credit_line: attrs.credit_line,
