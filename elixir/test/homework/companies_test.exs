@@ -78,6 +78,7 @@ defmodule Homework.CompaniesTest do
     end
 
     test "create_transaction/1 properly affects available credit" do
+      IO.inspect("testing")
       # To create transaction, Merchant, User, and Company must be defined
       {:ok, company1} = Companies.create_company(@valid_attrs)
       {:ok, merchant1} =
@@ -89,6 +90,7 @@ defmodule Homework.CompaniesTest do
       {:ok, transaction1} = Transactions.create_transaction(%{amount: 42857,
           credit: true, description: "Staircar purchase", merchant_id: merchant1.id,
           user_id: user1.id, company_id: company1.id})
+          IO.inspect("testing")
 
       assert company1.available_credit == 100000
 

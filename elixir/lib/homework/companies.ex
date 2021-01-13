@@ -72,11 +72,11 @@ defmodule Homework.Companies do
   """
   def update_company(%Company{} = company, attrs) do
 
-    if(attrs.credit_line == nil or company.credit_line == attrs.credit_line) do
-      Company.changeset(company,attrs)
-      |> Repo.update()
+    if(is_nil(attrs.credit_line)) do
+      {:error, %Ecto.Changeset{}}
     else
-      update_available_credit(company.id, attrs, company.available_credit+(attrs.credit_line-company.credit_line))
+      # IO.inspect attrs.available_credit
+      update_available_credit(company.id, attrs)
     end
   end
 
@@ -97,9 +97,24 @@ defmodule Homework.Companies do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_available_credit(id, attrs, available_credit) do
+  def update_available_credit(id, attrs) do
     company = get_company!(id)
+    update_company = %{
+      credit_line: attrs.credit_line,
+      name: attrs.name,
+      available_credit: (attrs.credit_line-company.credit_line) + company.available_credit
+    }
+    # Can't call update_company/2 as we will get recursive loop.
+    Company.changeset(company, update_company)
+    |> Repo.update()
+  end
 
+  @doc """
+  A method to recieve update credit requests from the transaction side of things
+  true represents that it is a transaction that called it.
+  """
+  def update_available_credit(id, amount, available_credit, true) do
+    company = get_company!(id)
     update_company = %{
       credit_line: company.credit_line,
       name: company.name,

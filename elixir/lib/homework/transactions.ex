@@ -60,7 +60,7 @@ defmodule Homework.Transactions do
   def modify_company({:ok, transaction}) do
     comp_id = transaction.company_id
     company = Companies.get_company!(comp_id)
-    Companies.update_available_credit(transaction.company_id, transaction.amount, company.available_credit)
+    Companies.update_available_credit(transaction.company_id, transaction.amount, company.available_credit, true)
     {:ok, transaction}
   end
 
@@ -69,9 +69,6 @@ defmodule Homework.Transactions do
   end
 
   def company_process({:ok, transaction_map}, attrs) do
-    # IO.inspect transaction
-    IO.inspect "here now we are."
-    # {:ok, transaction_map} = transaction
     company = Companies.get_company!(transaction_map.company_id)
     transaction_difference = attrs.amount - transaction_map.amount
     update_company = %{
