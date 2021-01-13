@@ -51,14 +51,44 @@ defmodule Homework.Transactions do
 
   """
   def create_transaction(attrs \\ %{}) do
-    {:ok, ret_val} = %Transaction{}
+    ret_val = %Transaction{}
     |> Transaction.changeset(attrs)
-    |> Repo.insert(returning: true)
-    company = Companies.get_company!(ret_val.company_id)
-    Companies.update_available_credit(ret_val.company_id, ret_val.amount, company.available_credit)
-    ret_val
+    |> Repo.insert()
+    |> modify_company
   end
 
+  def modify_company({:ok, transaction}) do
+    comp_id = transaction.company_id
+    company = Companies.get_company!(comp_id)
+    Companies.update_available_credit(transaction.company_id, transaction.amount, company.available_credit)
+    {:ok, transaction}
+  end
+
+  def modify_company({:error, changeset}) do
+    {:error, changeset}
+  end
+
+  def company_process({:ok, transaction_map}, attrs) do
+    # IO.inspect transaction
+    IO.inspect "here now we are."
+    # {:ok, transaction_map} = transaction
+    company = Companies.get_company!(transaction_map.company_id)
+    transaction_difference = attrs.amount - transaction_map.amount
+    update_company = %{
+      credit_line: company.credit_line,
+      name: company.name,
+      available_credit: company.available_credit - transaction_difference
+    }
+    if{:ok, _} = Companies.update_company(company, update_company) do
+      {:ok, transaction_map}
+    else
+      {:error, %Ecto.Changeset{}}
+  end
+  end
+
+  def company_process({:error, changeset}, attrs) do
+    {:error, changeset}
+  end
   @doc """
   Updates a transaction.
 
@@ -72,19 +102,11 @@ defmodule Homework.Transactions do
 
   """
   def update_transaction(%Transaction{} = transaction, attrs) do
-    transaction_difference = attrs.amount - transaction.amount
-    ret_val = transaction
+    transaction
     |> Transaction.changeset(attrs)
     |> Repo.update()
-    company = Companies.get_company(transaction.company_id)
-    update_company = %{
-      credit_line: company.credit_line,
-      name: company.name,
-      available_credit: company.available_credit - transaction_difference
-    }
-    Companies.update_company(company, update_company)
-    ret_val
-  end
+    |> company_process(attrs)
+end
 
   @doc """
   Deletes a transaction.
@@ -99,15 +121,15 @@ defmodule Homework.Transactions do
 
   """
   def delete_transaction(%Transaction{} = transaction) do
-    transaction = Repo.delete(transaction)
-    company = Companies.get_company(transaction.company_id)
+    {:ok, transaction_map} = Repo.delete(transaction)
+    company = Companies.get_company!(transaction_map.company_id)
     update_company = %{
       credit_line: company.credit_line,
       name: company.name,
-      available_credit: company.available_credit + transaction.amount
+      available_credit: company.available_credit + transaction_map.amount
     }
     Companies.update_company(company, update_company)
-    transaction
+    {:ok, transaction}
   end
 
   @doc """

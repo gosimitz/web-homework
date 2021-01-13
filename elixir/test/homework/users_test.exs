@@ -1,6 +1,6 @@
 defmodule Homework.UsersTest do
   use Homework.DataCase
-  alias Ecto.UUID
+  
   alias Homework.Users
   alias Homework.Users.User
   alias Homework.Companies

@@ -40,6 +40,7 @@ defmodule Homework.CompaniesTest do
       assert {:ok, %Company{} = company} = Companies.create_company(@valid_attrs)
       assert company.credit_line == 142857
       assert company.name == "some name"
+      assert company.available_credit == 142857
     end
 
     test "create_company/1 with invalid data returns error changeset" do
@@ -123,7 +124,11 @@ defmodule Homework.CompaniesTest do
       Transactions.create_transaction(%{amount: 42857,
           credit: true, description: "Staircar purchase", merchant_id: merchant1.id,
           user_id: user1.id, company_id: company1.id})
-      {:ok, company1} = Companies.update_company(company1, credit_line: 42857)
+          update = %{
+            credit_line: 42857,
+            name: company1.name
+          }
+      {:ok, company1} = Companies.update_company(company1, update)
       assert company1.available_credit == 0
 
     end

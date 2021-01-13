@@ -3,12 +3,11 @@ defmodule Homework.TransactionsTest do
 
   alias Homework.Merchants
   alias Homework.Transactions
+  alias Homework.Transactions.Transaction
   alias Homework.Users
   alias Homework.Companies
 
-
   describe "transactions" do
-    alias Homework.Transactions.Transaction
 
     setup do
       {:ok, merchant1} =
@@ -83,7 +82,7 @@ defmodule Homework.TransactionsTest do
          user1: user1,
          user2: user2,
          company1: company1,
-         company2: company2,
+         company2: company2
        }}
     end
 
