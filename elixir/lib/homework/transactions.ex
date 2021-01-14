@@ -51,7 +51,7 @@ defmodule Homework.Transactions do
 
   """
   def create_transaction(attrs \\ %{}) do
-    ret_val = %Transaction{}
+    %Transaction{}
     |> Transaction.changeset(attrs)
     |> Repo.insert()
     |> modify_company
@@ -83,7 +83,7 @@ defmodule Homework.Transactions do
   end
   end
 
-  def company_process({:error, changeset}, attrs) do
+  def company_process({:error, changeset}, _attrs) do
     {:error, changeset}
   end
   @doc """
@@ -125,7 +125,7 @@ end
       name: company.name,
       available_credit: company.available_credit + transaction_map.amount
     }
-    Companies.update_company(company, update_company)
+    Companies.delete_transaction_comp(company.id, update_company)
     {:ok, transaction}
   end
 

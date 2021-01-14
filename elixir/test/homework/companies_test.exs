@@ -78,7 +78,6 @@ defmodule Homework.CompaniesTest do
     end
 
     test "create_transaction/1 properly affects available credit" do
-      IO.inspect("testing")
       # To create transaction, Merchant, User, and Company must be defined
       {:ok, company1} = Companies.create_company(@valid_attrs)
       {:ok, merchant1} =
@@ -87,11 +86,11 @@ defmodule Homework.CompaniesTest do
           last_name: "some last_name", company_id: company1.id})
       #create company with credit line 142857.
 
-      {:ok, transaction1} = Transactions.create_transaction(%{amount: 42857,
+      Transactions.create_transaction(%{amount: 42857,
           credit: true, description: "Staircar purchase", merchant_id: merchant1.id,
           user_id: user1.id, company_id: company1.id})
           IO.inspect("testing")
-
+      company1 = Companies.get_company!(company1.id)
       assert company1.available_credit == 100000
 
     end
@@ -104,14 +103,15 @@ defmodule Homework.CompaniesTest do
           last_name: "some last_name", company_id: company1.id})
       #create company with credit line 142857.
 
-      {:ok} = Transactions.create_transaction(%{amount: 42857,
+       Transactions.create_transaction(%{amount: 42857,
           credit: true, description: "Staircar purchase", merchant_id: merchant1.id,
           user_id: user1.id, company_id: company1.id})
       {:ok, delete_me} = Transactions.create_transaction(%{amount: 500,
           credit: true, description: "Tickets for a Star War", merchant_id: merchant1.id,
           user_id: user1.id, company_id: company1.id})
-      {:ok} = Transactions.delete_transaction(id: delete_me.id)
-      assert company1.available_credit == 100500
+      Transactions.delete_transaction(delete_me)
+      company1 = Companies.get_company!(company1.id)
+      assert company1.available_credit == 100000
     end
 
     test "update_company/2 properly affects available credit" do

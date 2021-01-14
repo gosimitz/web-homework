@@ -80,10 +80,7 @@ defmodule Homework.Companies do
     end
   end
 
-  def update_available_credit(id, attrs, nil) do
-    company = Companies.get_company(id)
-    update_available_credit(id, attrs, company.credit_line)
-  end
+
   @doc """
   Updates a company's available_credit. transaction_amount is positive if available_credit
   is to be decreased and negative if AC is to be increased.
@@ -109,6 +106,10 @@ defmodule Homework.Companies do
     |> Repo.update()
   end
 
+  def update_available_credit(id, attrs, nil) do
+    company = get_company!(id)
+    update_available_credit(id, attrs, company.credit_line)
+  end
   @doc """
   A method to recieve update credit requests from the transaction side of things
   true represents that it is a transaction that called it.
@@ -118,12 +119,40 @@ defmodule Homework.Companies do
     update_company = %{
       credit_line: company.credit_line,
       name: company.name,
-      available_credit: available_credit
+      available_credit: available_credit - amount
     }
     # Can't call update_company/2 as we will get recursive loop.
     Company.changeset(company, update_company)
     |> Repo.update()
   end
+
+  @doc """
+  Updates a company's records to reflect the deleted transaction.
+
+  ## Examples
+
+      iex> delete_transaction(company, %{field: new_value})
+      {:ok, %Company{}}
+
+      iex> delete_transaction(company, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_transaction_comp(id, attrs) do
+
+    if(is_nil(attrs.credit_line)) do
+      {:error, %Ecto.Changeset{}}
+    else
+      # IO.inspect attrs.available_credit
+      #update_available_credit(company.id, attrs)
+      company = get_company!(id)
+
+      # Can't call update_company/2 as we will get recursive loop.
+      Company.changeset(company, attrs)
+      |> Repo.update()
+    end
+  end
+
 
   @doc """
   Deletes a company.
