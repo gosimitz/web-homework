@@ -36,7 +36,16 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   Create a new transaction
   """
   def create_transaction(_root, args, _info) do
-    case Transactions.create_transaction(args) do
+    new_args = %{
+      amount: Decimal.to_integer(args.amount * 100),
+      credit: args.credit,
+      debit: args.debit,
+      description: args.description,
+      merchant_id: args.merchant_id,
+      user_id: args.user_id,
+      company_id: args.company_id
+    }
+    case Transactions.create_transaction(new_args) do
       {:ok, transaction} ->
         {:ok, transaction}
 
@@ -50,8 +59,16 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   """
   def update_transaction(_root, %{id: id} = args, _info) do
     transaction = Transactions.get_transaction!(id)
-
-    case Transactions.update_transaction(transaction, args) do
+    new_args = %{
+      amount: Decimal.to_integer(args.amount * 100),
+      credit: args.credit,
+      debit: args.debit,
+      description: args.description,
+      merchant_id: args.merchant_id,
+      user_id: args.user_id,
+      company_id: args.company_id
+    }
+    case Transactions.update_transaction(transaction, new_args) do
       {:ok, transaction} ->
         {:ok, transaction}
 
