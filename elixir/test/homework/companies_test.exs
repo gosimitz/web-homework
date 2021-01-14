@@ -89,7 +89,6 @@ defmodule Homework.CompaniesTest do
       Transactions.create_transaction(%{amount: 42857,
           credit: true, description: "Staircar purchase", merchant_id: merchant1.id,
           user_id: user1.id, company_id: company1.id})
-          IO.inspect("testing")
       company1 = Companies.get_company!(company1.id)
       assert company1.available_credit == 100000
 

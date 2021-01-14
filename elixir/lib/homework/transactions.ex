@@ -56,7 +56,16 @@ defmodule Homework.Transactions do
     |> Repo.insert()
     |> modify_company
   end
+  @doc """
+    Modifies the company affiliated with the transaction. This is to ensure
+    that the company has the proper available_credit.
 
+    iex> modify_company(transaction, %{field: {:ok, transaction}})
+    {:ok, %Transaction{}}
+
+    iex> company_process(transaction, %{field: {:error, changeset}})
+    {:error, %Ecto.Changeset{}}
+  """
   def modify_company({:ok, transaction}) do
     comp_id = transaction.company_id
     company = Companies.get_company!(comp_id)
@@ -67,7 +76,17 @@ defmodule Homework.Transactions do
   def modify_company({:error, changeset}) do
     {:error, changeset}
   end
+  @doc """
+    Processes the company portion of a transaction. Updates the transaction's
+    company's available_credit based on the transaction amount.
 
+    iex> company_process(transaction, %{field: new_values})
+    {:ok, %Transaction{}}
+
+    iex> company_process(transaction, %{field: bad_values})
+    {:error, %Ecto.Changeset{}}
+
+  """
   def company_process({:ok, transaction_map}, attrs) do
     company = Companies.get_company!(transaction_map.company_id)
     transaction_difference = attrs.amount - transaction_map.amount
