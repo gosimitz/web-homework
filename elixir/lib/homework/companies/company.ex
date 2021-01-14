@@ -15,16 +15,16 @@ defmodule Homework.Companies.Company do
   # As a frequent user of if, else if, and else by trade, it was tough to leave
   # that comforting world. but here
   # I am, leaving the nest.
-  def modify_attrs(company, attrs, false) do
-    new_attrs = %{
+  def modify_attrs(attrs, false) do
+    _new_attrs = %{
       credit_line: attrs.credit_line,
       name: attrs.name,
       available_credit: attrs.credit_line
     }
   end
-  def modify_attrs(company, attrs, true) do
+  def modify_attrs(attrs, true) do
     # No need to change the attrs if the credit line stays the same then available_credit does too
-      new_attrs = %{
+      _new_attrs = %{
         credit_line: attrs.credit_line,
         name: attrs.name,
         available_credit: attrs.available_credit
@@ -40,12 +40,11 @@ defmodule Homework.Companies.Company do
     # See if company is already in DB. If so, then make new attrs with available_credit from old company
     # If not, then available_credit = credit_line
     if(is_nil(company.id)) do
-      attrs = modify_attrs(company, attrs, false)
+      attrs = modify_attrs( attrs, false)
 
     else #The value of available_credit is already stored in the database. Thus the new available_credit
     #must be calculated based on changes to the credit_line, if that changed.
-      stored_company = Companies.get_company!(company.id)
-      attrs = modify_attrs(company, attrs, true)
+      attrs = modify_attrs(attrs, true)
 
     end
 
