@@ -23,3 +23,9 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+## To run the tests:
+`MIX_ENV=test mix ecto.resetAndRunTest`
+
+## To seed the database:
+`mix ecto.setup` or `mix run priv/repo/seeds.exs` if you wish to run the seed file without wiping the database first.
